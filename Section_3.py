@@ -5,6 +5,7 @@ from sklearn.metrics.pairwise import euclidean_distances
 from scipy.sparse.linalg import eigs
 from mpl_toolkits.mplot3d import Axes3D  # For 3D plotting
 
+np.random.seed(10)
 # Number of points
 N = 1000
 
@@ -133,8 +134,7 @@ dmap_alpha_1 = dm.DiffusionMap.from_sklearn(alpha=1, epsilon=eps, n_evecs=10)
 dmap_alpha_0.fit(points)
 dmap_alpha_1.fit(points)
 
-# Extract the diffusion map embedding (skip the first eigenvector)
-# Take the real part since eigenvectors may be complex
+# Extract the diffusion map embedding
 embedding_alpha_0 = np.real(dmap_alpha_0.evecs[:, 1:3])
 embedding_alpha_1 = np.real(dmap_alpha_1.evecs[:, 1:3])
 
