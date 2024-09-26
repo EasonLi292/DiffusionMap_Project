@@ -6,10 +6,10 @@ import matplotlib.pyplot as plt
 from sklearn.metrics.pairwise import pairwise_distances
 from scipy.sparse.linalg import eigsh
 
-# Step 1: Generate a noisy 3D helix
-N = 400  # Number of data points
-t = np.linspace(0, 4 * np.pi, N)  # Parameter t
-noise_level = 0.1  # Noise level
+# noisy 3D helix
+N = 400  
+t = np.linspace(0, 4 * np.pi, N) 
+noise_level = 0.1  
 
 # Helix parameters
 x = np.cos(t) + noise_level * np.random.randn(N)
@@ -24,13 +24,17 @@ t_normalized = (t - t.min()) / (t.max() - t.min())
 cmap = plt.cm.get_cmap('hsv')
 colors = cmap(t_normalized)
 
-# Step 2: Compute the diffusion map embedding
 def diffusion_map(data, n_components=2, alpha=0.5):
 
     distances = pairwise_distances(data, metric='euclidean')
+
+    # WE CAN CHANGE E TO SHOW THE RELATIONSHIP OF EPSILON AND PERTURBATION
+    # VALID AS LONG AS SQRT(E) > PERTURBATION
     epsilon = np.median(distances)
 
     # Compute the kernel matrix
+    # Note gaussian kernel is a smooth function, thus
+    # we can linearize the effect of perturbations:
     K = np.exp(-distances ** 2 / (2 * epsilon ** 2))
 
     # Compute degree matrix
@@ -53,7 +57,7 @@ def diffusion_map(data, n_components=2, alpha=0.5):
     eigenvalues = eigenvalues[idx]
     eigenvectors = eigenvectors[:, idx]
 
-    # Skip the first eigenvector (trivial eigenvector)
+    # Skip the first eigenvector
     embedding = eigenvectors[:, 1:n_components + 1] * eigenvalues[1:n_components + 1]
 
     return embedding.real
@@ -61,7 +65,7 @@ def diffusion_map(data, n_components=2, alpha=0.5):
 # Apply diffusion map
 embedding = diffusion_map(points, n_components=2, alpha=1)
 
-# Step 3: Visualize the original noisy helix
+# Noisy
 fig = plt.figure(figsize=(12, 6))
 ax = fig.add_subplot(121, projection='3d')
 ax.scatter(points[:, 0], points[:, 1], points[:, 2], c=colors, s=20)
@@ -70,7 +74,7 @@ ax.set_xlabel('X')
 ax.set_ylabel('Y')
 ax.set_zlabel('Z')
 
-# Step 4: Visualize the 2D embedding
+# 2D embedding
 ax2 = fig.add_subplot(122)
 ax2.scatter(embedding[:, 0], embedding[:, 1], c=colors, s=20)
 ax2.set_title('2D Diffusion Map Embedding')

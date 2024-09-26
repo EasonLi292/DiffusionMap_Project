@@ -16,7 +16,6 @@ r = 1  # Minor radius
 k = 7  # Number of twists around the tube
 l = 1  # Number of times the curve winds around the torus
 
-# Generate parameter t
 t = np.linspace(0, 2 * np.pi, N)
 
 # Define the slowly varying density function over half a period
@@ -41,8 +40,6 @@ points = np.vstack((x, y, z)).T
 
 # Normalize t_nonuniform for color mapping
 t_normalized = (t_nonuniform - t_nonuniform.min()) / (t_nonuniform.max() - t_nonuniform.min())
-
-# Create a colormap
 cmap = cm.get_cmap('hsv')
 colors = cmap(t_normalized)
 
@@ -83,7 +80,7 @@ vals_0, vecs_0 = eigs(P_alpha_0, k=num_eigenvectors, which='LM')
 vals_1, vecs_1 = eigs(P_alpha_1, k=num_eigenvectors, which='LM')
 
 # Visualization
-# Original 3D Curve with Color-Coded Points
+# Original 3D Curve 
 fig = plt.figure(figsize=(12, 8))
 ax = fig.add_subplot(111, projection='3d')
 ax.scatter(points[:, 0], points[:, 1], points[:, 2], c=colors, s=20)
@@ -98,7 +95,7 @@ plt.figure(figsize=(12, 6))
 plt.scatter(t_nonuniform, d, c=colors, s=20)
 plt.title('Density of Points Along the Curve')
 plt.xlabel('Curve Parameter (t)')
-plt.ylabel('Density Estimate (d)')
+plt.ylabel('Density (d)')
 plt.show()
 
 # Embedding via Graph Laplacian (α = 0)
@@ -106,7 +103,7 @@ embedding_alpha_0 = vecs_0[:, 1:3]  # Use the first two non-trivial eigenvectors
 
 plt.figure(figsize=(8, 6))
 plt.scatter(embedding_alpha_0[:, 0], embedding_alpha_0[:, 1], c=colors, s=20)
-plt.title('Embedding via Graph Laplacian (α = 0)')
+plt.title('Embedding via Graph Laplacian')
 plt.xlabel('Eigenvector 1')
 plt.ylabel('Eigenvector 2')
 plt.axis('equal')
@@ -117,7 +114,7 @@ embedding_alpha_1 = vecs_1[:, 1: 3]  # Use the first two non-trivial eigenvector
 
 plt.figure(figsize=(8, 6))
 plt.scatter(embedding_alpha_1[:, 0], embedding_alpha_1[:, 1], c=colors, s=20)
-plt.title('Embedding via Laplace–Beltrami Approximation (α = 1)')
+plt.title('Embedding via Laplace–Beltrami Approximation')
 plt.xlabel('Eigenvector 1')
 plt.ylabel('Eigenvector 2')
 plt.axis('equal')
