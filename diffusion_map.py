@@ -12,6 +12,7 @@ from scipy.linalg import fractional_matrix_power
 SECTION 2
 '''
 #Make_blobs: generate data with 900 samples, 3 centers in 2D space, 
+#using article for centers
 
 centers = [(-1.5, 0), (1, -1), (1, 1)]
 X,y = make_blobs(n_samples = 900,n_features = 2,centers = centers, cluster_std=0.4, random_state=1)
@@ -40,13 +41,13 @@ def plot_diffusion_and_matrix(P_power, title, fixed_point):
     # Left plot: Diffusion intensity
     plt.subplot(1, 2, 1)
     diffusion_intensity = P_power[fixed_point, :]
-    plt.scatter(X[:, 0], X[:, 1], c=diffusion_intensity, cmap='viridis')
+    plt.scatter(X[:, 0], X[:, 1], c=diffusion_intensity, cmap='copper')
     plt.colorbar()
     plt.title(f"Diffusion Intensity at {title}")
     
     # Right plot: Transition matrix
     plt.subplot(1, 2, 2)
-    plt.imshow(P_power, cmap='viridis')
+    plt.imshow(P_power, cmap='copper')
     plt.colorbar()
     plt.title(f"Transition Matrix {title}")
     
@@ -56,6 +57,7 @@ def plot_diffusion_and_matrix(P_power, title, fixed_point):
 plot_diffusion_and_matrix(P8, "t = 8", fixed_point)
 plot_diffusion_and_matrix(P64, "t = 64", fixed_point)
 plot_diffusion_and_matrix(P1024, "t = 1024", fixed_point)
+
 
 #Figure 2
 '''
