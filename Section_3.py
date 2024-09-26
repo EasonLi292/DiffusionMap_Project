@@ -119,3 +119,50 @@ plt.xlabel('Eigenvector 1')
 plt.ylabel('Eigenvector 2')
 plt.axis('equal')
 plt.show()
+
+from pydiffmap import diffusion_map as dm
+# Compute pairwise distances to estimate epsilon
+distances = euclidean_distances(points, points)
+eps = np.median(distances) ** 2
+
+# Instantiate the Diffusion Map object
+dmap_alpha_0 = dm.DiffusionMap.from_sklearn(alpha=0, epsilon=eps, n_evecs=10)
+dmap_alpha_1 = dm.DiffusionMap.from_sklearn(alpha=1, epsilon=eps, n_evecs=10)
+
+# Fit the model to the data
+dmap_alpha_0.fit(points)
+dmap_alpha_1.fit(points)
+
+# Extract the diffusion map embedding (skip the first eigenvector)
+# Take the real part since eigenvectors may be complex
+embedding_alpha_0 = np.real(dmap_alpha_0.evecs[:, 1:3])
+embedding_alpha_1 = np.real(dmap_alpha_1.evecs[:, 1:3])
+
+# Visualization
+# Original 3D Curve
+fig = plt.figure(figsize=(12, 8))
+ax = fig.add_subplot(111, projection='3d')
+ax.scatter(points[:, 0], points[:, 1], points[:, 2], c=colors, s=20)
+ax.set_title('Original 3D Toroidal Spiral Curve with Color-Coded Points')
+ax.set_xlabel('X')
+ax.set_ylabel('Y')
+ax.set_zlabel('Z')
+plt.show()
+
+# Embedding via Graph Laplacian (α = 0)
+plt.figure(figsize=(8, 6))
+plt.scatter(embedding_alpha_0[:, 0], embedding_alpha_0[:, 1], c=colors, s=20)
+plt.title('Embedding via Graph Laplacian (α = 0)')
+plt.xlabel('Eigenvector 1')
+plt.ylabel('Eigenvector 2')
+plt.axis('equal')
+plt.show()
+
+# Embedding via Laplace–Beltrami Approximation (α = 1)
+plt.figure(figsize=(8, 6))
+plt.scatter(embedding_alpha_1[:, 0], embedding_alpha_1[:, 1], c=colors, s=20)
+plt.title('Embedding via Laplace–Beltrami Approximation (α = 1)')
+plt.xlabel('Eigenvector 1')
+plt.ylabel('Eigenvector 2')
+plt.axis('equal')
+plt.show()
